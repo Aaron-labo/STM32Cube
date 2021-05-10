@@ -1,0 +1,9 @@
+W25QXX.c:21:9:BSP_W25Qx_Init	8	static
+W25QXX.c:32:13:BSP_W25Qx_Reset	16	static
+W25QXX.c:46:16:BSP_W25Qx_GetStatus	16	static
+W25QXX.c:69:9:BSP_W25Qx_WriteEnable	16	static
+W25QXX.c:97:6:BSP_W25Qx_Read_ID	24	static
+W25QXX.c:116:9:BSP_W25Qx_Read	32	static
+W25QXX.c:143:9:BSP_W25Qx_Write	48	static
+W25QXX.c:213:9:BSP_W25Qx_Erase_Block	24	static
+W25QXX.c:247:9:BSP_W25Qx_Erase_Chip	16	static

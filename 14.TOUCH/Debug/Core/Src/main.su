@@ -1,0 +1,7 @@
+main.c:66:6:kai_display	16	static
+main.c:77:6:display_init	16	static
+main.c:96:5:main	16	static
+main.c:158:6:SystemClock_Config	72	static
+main.c:204:6:_sys_exit	16	static
+main.c:208:1:__io_putchar	16	static
+main.c:229:6:Error_Handler	4	static,ignoring_inline_asm

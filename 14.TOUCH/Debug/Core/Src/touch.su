@@ -1,0 +1,7 @@
+touch.c:6:6:TOUCH_Init	24	static
+touch.c:17:9:WR_Cmd	32	static
+touch.c:27:10:TOUCH_Read_AD	112	static
+touch.c:79:9:TOUCH_ReadXY	24	static
+touch.c:127:9:TOUCH_ReadAdjust	32	static
+touch.c:158:6:TOUCH_Adjust	64	static
+touch.c:218:9:TOUCH_Scan	16	static

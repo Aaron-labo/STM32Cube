@@ -1,0 +1,6 @@
+myusart.c:46:6:enable_UART_Receive_IT	32	static
+myusart.c:69:6:ATEK_frmCheck	16	static
+myusart.c:96:6:usart_register_data_callback	16	static
+myusart.c:113:6:HAL_UART_RxCpltCallback	16	static
+myusart.c:143:6:_sys_exit	16	static
+myusart.c:147:1:__io_putchar	16	static
