@@ -7,8 +7,7 @@
 
 #include "lcd_irmp.h"
 
-void show_Data(float voltage, float temperature, float target_temp1,
-		float target_temp2, float pwmVal_fan, float pwmVal_res) {
+void show_Data(float voltage, float temperature, float target_temp, float pwmVal_fan, float pwmVal_res) {
 	static uint8_t Show_Str[64];
 	sprintf((char*) Show_Str, "TEMPERATURE CONTROL");
 	LCD_ShowString(10, 30, 240, 24, 24, Show_Str);
@@ -16,14 +15,12 @@ void show_Data(float voltage, float temperature, float target_temp1,
 	LCD_ShowString(20, 80, 220, 16, 16, Show_Str);
 	sprintf((char*) Show_Str, "Current temperature: %.2f", temperature);
 	LCD_ShowString(20, 110, 220, 16, 16, Show_Str);
-	sprintf((char*) Show_Str, "Initial temperature: %.1f", target_temp1);
+	sprintf((char*) Show_Str, "Target temperature: %.1f", target_temp);
 	LCD_ShowString(20, 140, 220, 16, 16, Show_Str);
-	sprintf((char*) Show_Str, "Target  temperature: %.1f", target_temp2);
-	LCD_ShowString(20, 170, 220, 16, 16, Show_Str);
 	sprintf((char*) Show_Str, "PWM_Fan: %.2f", pwmVal_fan / 1000);
-	LCD_ShowString(20, 200, 220, 16, 16, Show_Str);
+	LCD_ShowString(20, 170, 220, 16, 16, Show_Str);
 	sprintf((char*) Show_Str, "PWM_Res: %.2f", pwmVal_res / 1000);
-	LCD_ShowString(20, 230, 220, 16, 16, Show_Str);
+	LCD_ShowString(20, 200, 220, 16, 16, Show_Str);
 }
 
 void Beep(void) {

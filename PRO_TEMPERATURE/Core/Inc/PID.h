@@ -14,10 +14,9 @@ typedef struct {
 	float integral;  //定义积分值
 } PID;
 
-void PID_Init_Fan(PID* pid);
-void PID_Init_Res(PID* pid);
-float PID_Calc_Fan(PID* pid, float temp);
-float PID_Calc_Res(PID* pid, float temp);
+void PID_Init(PID* pid);
+float PID_Calc(PID* pid, float temp);
 void ChaSetTemp(PID* pid, float settemp);
+void PID_inte_Init(PID* pid);
 
 #endif

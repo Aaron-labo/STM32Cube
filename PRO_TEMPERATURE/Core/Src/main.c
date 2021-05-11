@@ -63,7 +63,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-uint16_t adc_buffer[10] = { 0 }; //ADC采集数据缓冲区
+uint16_t adc_buffer[20] = { 0 }; //ADC采集数据缓冲区
 uint16_t temp_vol = 0;
 float voltage = 0; //存放采样的电压值
 float temperature;
@@ -79,8 +79,7 @@ float pwmVal_fan = 0; //调节输出PWM波的占空比，0~1000,当设为500时�
 float pwmVal_res = 10; //调节输出PWM波的占空比，0~1000,当设为500时占空比为50%
 float ChaPWM;  //PWM占空比的变换值
 
-float target_temp1 = 40;
-float target_temp2 = 60;
+float target_temp = 40;
 
 uint8_t mode = 0;
 float LastTemp = 0;
@@ -97,7 +96,8 @@ uint8_t Rx_Date; //接受串口输入
 //DMA回调函数
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 	if (hadc1.Instance == ADC1) {  //判断是否为ADC1的模拟输入
-		for (i = 0; i < 9; i++) {
+		//软件低通滤波(但是效果并不理想)
+		for (i = 0; i < 19; i++) {
 			temp_vol = adc_buffer[i];
 			if (temp_vol > adc_buffer[i + 1]) {
 				adc_buffer[i] = adc_buffer[i + 1];
@@ -105,31 +105,14 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 			}
 		}
 		voltage = 0;
-		for (i = 4; i < 6; i++) {
+		for (i = 8; i < 14; i++) {
 			voltage += ((float) adc_buffer[i]) * 3.3 / 4096;
 		}
-		voltage /= 2;
+		voltage /= 6;
 
-		//通过PID调节水泥电阻占空比
-//		if (lastVoltage == 0) {
-//			temperature = conversion1(voltage);
-//			lastVoltage = preVoltage;
-//			preVoltage = voltage;
-//		} else if ((voltage >= preVoltage && preVoltage >= lastVoltage
-//				&& voltage >= pid_res->SetTemp)
-//				|| (voltage <= preVoltage && preVoltage <= lastVoltage
-//						&& voltage && voltage <= pid_res->SetTemp)) {
-//			temperature = conversion2(voltage);
-//			lastVoltage = preVoltage;
-//			preVoltage = voltage;
-//		} else {
-//			temperature = conversion1(voltage);
-//			lastVoltage = preVoltage;
-//			preVoltage = voltage;
-//		}
-
+		//根据电压——温度转化函数得到对应温度值
 		temperature = conversion1(voltage);
-
+		//通过PID调节水泥电阻占空比
 		if (mode == 1) {
 			if (LastTemp != 0
 					&& (temperature - LastTemp >= 1
@@ -142,26 +125,26 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 			}
 			if (isUp == 1) {
 				temperature = conversion1(voltage);
-				printf("采用上升温度。。。。\r\n");
+				//printf("采用上升温度。。。。\r\n");
 			} else if (isUp == 0) {
 				temperature = conversion2(voltage);
-				printf("采用下降温度。。。。\r\n");
+				//printf("采用下降温度。。。。\r\n");
 			}
-			if (temperature <= pid_res->SetTemp - 20) {
+
+			if (temperature <= pid_res->SetTemp - 10) {
 				pwmVal_res = 700;
 				__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwmVal_res);
 			} else {
-				pwmVal_res = PID_Calc_Res(pid_res, temperature);
+				pwmVal_res = PID_Calc(pid_res, temperature);
 				__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwmVal_res);
-				printf("\r\n水泥电阻电压PWM的当前占空比为%.2f\r\n", pwmVal_res / 1000);
+//				printf("\r\n水泥电阻电压PWM的当前占空比为%.2f\r\n", pwmVal_res / 1000);
 			}
 
 			pwmVal_fan = voltage * 272.7 - 263.56; //电压为1.7V是占空比为0.20;电压为2.8V时占空比为0.50
 			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, pwmVal_fan);
-			printf("\r\n风扇PWM的当前占空比为%.2f\r\n", pwmVal_fan / 1000);
 		} else if (mode == 2) {
 			temperature = conversion2(voltage);
-			if (temperature >= pid_res->SetTemp) {
+			if (temperature >= pid_res->SetTemp-2) {
 				pwmVal_fan = 1000;
 				__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, pwmVal_fan);
 				pwmVal_res = 10;
@@ -169,12 +152,13 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 			} else {
 				mode = 1;
 			}
-
+		} else {
+			pwmVal_fan = voltage * 272.7 - 263.56; //电压为1.7V是占空比为0.20;电压为2.8V时占空比为0.50
+			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, pwmVal_fan);
 		}
 
 		//LCD输出相关信息
-		show_Data(voltage, temperature, target_temp1, target_temp2, pwmVal_fan,
-				pwmVal_res);
+		show_Data(voltage, temperature, target_temp, pwmVal_fan, pwmVal_res);
 
 		//当温度达到60±1℃时，LED1亮；达到40±1℃时，LED0亮；其他时候灭
 		if (temperature >= 59 && temperature <= 61) {
@@ -190,72 +174,45 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
 //USART接收回调函数
 //在调试阶段，使用串口调节占空比
-/* 风扇占空比：0xa1上升   0xa2下降    0xa3调为0.5
- *    电阻占空比：0xb1上升   0xb2下降    0xb3调为0.5
- *    温度预设值40   0xc1; 温度预设值60    0xc2;
- *    开始升温0xd1    开始降温0xd2    结束调温0xd3
+/* 将目的温度值调整到任意位置  0x**  (“**”为目的温度值的十六进制形式)
+ *   开始升温  0xa1    开始降温 0xa2    停止调温  0xa3
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	if (huart->Instance == USART1) {
-		if (Rx_Date == 0xa1) {
-			pwmVal_fan += 10;
-			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, pwmVal_fan);
-			printf("\r\n控风PWM的占空比增加了0.01, 当前为%.2f\r\n", pwmVal_fan / 1000);
+		if (Rx_Date <= 0xa0) {
+			target_temp = Rx_Date;
+			ChaSetTemp(pid_res, target_temp);
 			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xa2) {
-			pwmVal_fan -= 10;
-			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, pwmVal_fan);
-			printf("\r\n控风PWM的占空比减少了0.01, 当前为%.2f\r\n", pwmVal_fan / 1000);
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xa3) {
-			pwmVal_fan = 500;
-			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, pwmVal_fan);
-			printf("\r\n控风PWM的占空比复位了, 当前为%.2f\r\n", pwmVal_fan / 1000);
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xb1) {
-			pwmVal_res += 10;
-			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwmVal_res);
-			printf("\r\n控电阻PWM的占空比增加了0.01, 当前为%.2f\r\n", pwmVal_res / 1000);
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xb2) {
-			pwmVal_res -= 10;
-			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwmVal_res);
-			printf("\r\n控电阻PWM的占空比减少了0.01, 当前为%.2f\r\n", pwmVal_res / 1000);
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xb3) {
-			pwmVal_res = 500;
-			__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwmVal_res);
-			printf("\r\n控电阻PWM的占空比复位了 当前为%.2f\r\n", pwmVal_res / 1000);
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xc1) {
-			ChaSetTemp(pid_res, target_temp1);
-			printf("\r\n温度预设值为40\r\n");
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-			sprintf((char*) Show_Str, "(Target): %.2f", target_temp1);
-			LCD_ShowString(54, 140, 200, 16, 16, Show_Str);
-		} else if (Rx_Date == 0xc2) {
-			ChaSetTemp(pid_res, target_temp2);
-			printf("\r\n温度预设值为60\r\n");
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-			sprintf((char*) Show_Str, "(Target): %.2f", target_temp2);
-			LCD_ShowString(54, 140, 200, 16, 16, Show_Str);
-		} else if (Rx_Date == 0xd1) {
-			mode = 1;
-			printf("\r\n开始升温！！！\r\n");
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xd2) {
-			mode = 2;
-			printf("\r\n开始降温！！！\r\n");
-			PID_Init_Res(pid_res);
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
-		} else if (Rx_Date == 0xd3) {
-			mode = 0;
-			printf("结束调温！！！！\r\n");
-			HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
+			printf("当前温度目标值为 %.2f\r\n", target_temp);
+		} else {
+			if (Rx_Date == 0xa1) {
+				mode = 1;
+				PID_inte_Init(pid_res);
+				printf("\r\n开始升温！！！温度升至%.2f\r\n", target_temp);
+				HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
+			} else if (Rx_Date == 0xa2) {
+				mode = 2;
+				PID_inte_Init(pid_res);
+				printf("\r\n开始降温！！！温度降至%.2f\r\n", target_temp);
+				HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
+			} else if (Rx_Date == 0xa3) {
+				mode = 0;
+				printf("停止调温！！！");
+				HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
+			}
+//			else if (Rx_Date == 0xb1) {
+//				pwmVal_res += 10;
+//				__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwmVal_res);
+//				printf("水泥电阻的占空比增加了0.01, 当前水泥电阻占空比为%.2f", pwmVal_fan / 1000);
+//				HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
+//			} else if (Rx_Date == 0xb2) {
+//				pwmVal_res -= 10;
+//				__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwmVal_res);
+//				printf("水泥电阻的占空比减小了0.01, 当前水泥电阻占空比为%.2f", pwmVal_fan / 1000);
+//				HAL_UART_Receive_IT(&huart1, &Rx_Date, 1);
+//			}
 		}
-
-		show_Data(voltage, temperature, target_temp1, target_temp2, pwmVal_fan,
-				pwmVal_res);
+		show_Data(voltage, temperature, target_temp, pwmVal_fan, pwmVal_res);
 	}
 }
 
@@ -301,19 +258,18 @@ int main(void) {
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); //开启PWM波输出
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); //开启PWM波输出2
 	HAL_UART_Receive_IT(&huart1, &Rx_Date, 1); //开启串口接受中断
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) &adc_buffer, 10); //DMA方式开启ADC
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) &adc_buffer, 20); //DMA方式开启ADC
 
 	//分别为风扇和水泥电阻的结构体申请内存空间
 	pid_res = (PID*) malloc(sizeof(PID));
 
-	PID_Init_Res(pid_res); //初始化PID结构体
+	PID_Init(pid_res); //初始化PID结构体
 	LCD_Init(); //LCD显示屏初始化
 	irmp_init(); //初始化红外遥控
 
 	printf("初始化完成。。。\r\n");
-
-	show_Data(voltage, temperature, target_temp1, target_temp2, pwmVal_fan,
-			pwmVal_res);
+	//LCD显示各项数据
+	show_Data(voltage, temperature, target_temp, pwmVal_fan, pwmVal_res);
 
 	/* USER CODE END 2 */
 

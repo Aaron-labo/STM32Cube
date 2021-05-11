@@ -30,7 +30,7 @@
 #define ZERO	0x42
 #define BACK	0x4A
 
-void show_Data(float voltage, float temperature, float target_temp1, float target_temp2, float pwmVal_fan, float pwmVal_res);
+void show_Data(float voltage, float temperature, float target_temp, float pwmVal_fan, float pwmVal_res);
 void Beep(void);
 void IRMP_Scan(uint8_t mode, uint8_t* isStart);
 
