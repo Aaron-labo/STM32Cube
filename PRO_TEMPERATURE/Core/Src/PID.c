@@ -11,7 +11,7 @@ void PID_Init(PID *pid) {
 	pid->integral = 0;
 	pid->Kp = 35.0;
 	pid->Ki = 0.4;
-	pid->Kd = 30.0;
+	pid->Kd = 32.0;
 }
 
 //水泥电阻PID调节函数
