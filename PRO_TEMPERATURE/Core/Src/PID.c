@@ -9,9 +9,9 @@ void PID_Init(PID *pid) {
 	pid->err_last = 0;
 	pid->voltage = 0;
 	pid->integral = 0;
-	pid->Kp = 35.0;
-	pid->Ki = 0.4;
-	pid->Kd = 32.0;
+	pid->Kp = 32.5;
+	pid->Ki = 0.5;
+	pid->Kd = 70.0;
 }
 
 //水泥电阻PID调节函数
@@ -29,7 +29,7 @@ float PID_Calc(PID *pid, float temp) {
 	pid->voltage = pid->Kp * pid->err + pid->Ki * pid->integral
 			+ pid->Kd * (pid->err - pid->err_last);
 	pid->ActualTemp = pid->voltage * 1.0;
-	printf("比例%.2f\r\n积分%.2f\r\n微分%.2f\r\n输出为%.2f", pid->err, pid->integral,
+	printf("比例%.2f\r\n积分%.2f\r\n微分%.2f\r\n输出为%.2f\r\n", pid->err, pid->integral,
 			(pid->err - pid->err_last), pid->ActualTemp);
 	pid->err_last = pid->err;
 
@@ -44,12 +44,10 @@ float PID_Calc(PID *pid, float temp) {
 }
 
 //改变设定值
-void ChaSetTemp(PID* pid, float settemp)
-{
+void ChaSetTemp(PID *pid, float settemp) {
 	pid->SetTemp = settemp;
 }
 
-void PID_inte_Init(PID* pid)
-{
+void PID_inte_Init(PID *pid) {
 	pid->integral = 0;
 }
