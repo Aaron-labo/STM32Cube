@@ -1,5 +1,5 @@
 
-1.LED.elf:     file format elf32-littlearm
+01.LED.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_line   00004a0f  00000000  00000000  0003c439  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00089ad4  00000000  00000000  00040e48  2**0
+ 18 .debug_str    00089b2e  00000000  00000000  00040e48  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000ca91c  2**0
+ 19 .comment      00000053  00000000  00000000  000ca976  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00000d40  00000000  00000000  000ca970  2**2
+ 20 .debug_frame  00000d40  00000000  00000000  000ca9cc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
