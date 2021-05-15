@@ -35,34 +35,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := 2.BEEP
+BUILD_ARTIFACT_NAME := 02.BEEP
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-2.BEEP.elf \
+02.BEEP.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-2.BEEP.list \
+02.BEEP.list \
 
 OBJCOPY_BIN += \
-2.BEEP.bin \
+02.BEEP.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: 2.BEEP.elf secondary-outputs
+main-build: 02.BEEP.elf secondary-outputs
 
 # Tool invocations
-2.BEEP.elf: $(OBJS) $(USER_OBJS) E:\Singlechip\stm32\MyCode\stm32Cube\2.BEEP\STM32F103ZETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "2.BEEP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\Singlechip\stm32\MyCode\stm32Cube\2.BEEP\STM32F103ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="2.BEEP.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+02.BEEP.elf: $(OBJS) $(USER_OBJS) E:\Singlechip\stm32\MyCode\STM32Cube\02.BEEP\STM32F103ZETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "02.BEEP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\Singlechip\stm32\MyCode\STM32Cube\02.BEEP\STM32F103ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="02.BEEP.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -71,13 +71,13 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-2.BEEP.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "2.BEEP.list"
+02.BEEP.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "02.BEEP.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-2.BEEP.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "2.BEEP.bin"
+02.BEEP.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "02.BEEP.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 
