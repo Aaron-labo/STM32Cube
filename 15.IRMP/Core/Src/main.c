@@ -24,8 +24,6 @@
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-#include "beep.h"
 #include "lcd_irmp.h"
 /* USER CODE END Includes */
 
@@ -98,94 +96,11 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-		static uint8_t isPress = 1;
 		if (irmp_get_data(&irmp_data)) {
 			HAL_Delay(50);
-			printf("按键被按下了......");
+			printf("按键被按下了......\r\n");
 
-			if (isPress && irmp_get_data(&irmp_data)) {
-				HAL_Delay(10);
-				isPress = 0;
-				switch (irmp_data.command) {
-				case POWER:
-					Beep();
-					break;
-
-				case UP:
-					Beep();
-					break;
-
-				case DOWN:
-					Beep();
-					break;
-
-				case RIGHT:
-					Beep();
-					break;
-
-				case LEFT:
-					Beep();
-					break;
-
-				case CENTER:
-					Beep();
-					break;
-
-				case VOL_ADD:
-					Beep();
-					break;
-
-				case VOL_DEC:
-					Beep();
-					break;
-
-				case ONE:
-					Beep();
-					break;
-
-				case TWO:
-					Beep();
-					break;
-
-				case THREE:
-					Beep();
-					break;
-
-				case FOUR:
-					Beep();
-					break;
-
-				case FIVE:
-					Beep();
-					break;
-
-				case SIX:
-					Beep();
-					break;
-
-				case SEVEN:
-					Beep();
-					break;
-
-				case EIGHT:
-					Beep();
-					break;
-
-				case NINE:
-					Beep();
-					break;
-
-				case ZERO:
-					Beep();
-					break;
-
-				case BACK:
-					Beep();
-					break;
-				}
-			} else {
-				isPress = 1;
-			}
+			printf("指令:0x%02x\r\n", irmp_data.command);
 		}
     /* USER CODE END WHILE */
 

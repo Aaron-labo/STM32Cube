@@ -13,6 +13,25 @@
 #ifndef _IRMP_H_
 #define _IRMP_H_
 
+#define UP    	0x18
+#define DOWN  	0x51
+#define RIGHT 	0x08
+#define LEFT  	0x5a
+#define CENTER	0x1c
+#define STAR	0x16
+#define HASH    0x0d
+#define ONE		0x45
+#define TWO		0x46
+#define THREE	0x47
+#define FOUR	0x44
+#define FIVE	0x40
+#define SIX		0x43
+#define SEVEN	0x07
+#define EIGHT	0x15
+#define NINE	0x09
+#define ZERO	0x19
+
+
 #ifndef IRMP_USE_AS_LIB
 #  define IRMPCONFIG_STAGE1_H
 #  include "irmpconfig.h"

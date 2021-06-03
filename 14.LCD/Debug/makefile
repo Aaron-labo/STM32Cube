@@ -61,8 +61,8 @@ all: main-build
 main-build: 14.LCD.elf secondary-outputs
 
 # Tool invocations
-14.LCD.elf: $(OBJS) $(USER_OBJS) E:\Singlechip\stm32\MyCode\stm32Cube\14.LCD\STM32F103ZETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "14.LCD.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\Singlechip\stm32\MyCode\stm32Cube\14.LCD\STM32F103ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="14.LCD.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+14.LCD.elf: $(OBJS) $(USER_OBJS) E:\Singlechip\stm32\MyCode\STM32Cube\14.LCD\STM32F103ZETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "14.LCD.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\Singlechip\stm32\MyCode\STM32Cube\14.LCD\STM32F103ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="14.LCD.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

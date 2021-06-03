@@ -84,6 +84,10 @@
                                     <listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F1xx/Include"/>
                                     									
                                     <listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="../Driver/LED"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="../Drivers/KEY"/>
                                     								
                                 </option>
                                 								

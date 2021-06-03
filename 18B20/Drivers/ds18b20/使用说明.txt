@@ -1,0 +1,93 @@
+使用说明：
+本库修改自 ：https://github.com/nimaltd/ds18b20 的fork库 https://github.com/Juzujka/ds18b20
+
+据作者 `Juzujka` 说明，其修改较 `nimaltd` 的库优化了以下几个部分：
+
+1、option for delaying with NOPs instead of using a timer
+2、removed unnecessary long commands in time-critical parts
+3、added critical sections in time-critical parts, it is mandatory
+4、added command for supply for power heavy operation, such as measuring at high temperature
+5、added reading single device on the bus without selecting by ROM
+
+本库基于 `Juzujka` 的修改库。
+
+基本使用方法(来自 `nimaltd`库)
+
+1) Enable FreeRTOS
+2) Config a Gpio [and a timer on CubeMX . 1us per tick example 72 MHz cpu >>> Prescaler=(72-1) counter period=0xFFFF (注：Juzujka修改后，不需要配置定时器)]
+3) Select "General peripheral Initalizion as a pair of '.c/.h' file per peripheral" on project settings.
+4) Config your ds18b20Config.h file.
+5) call Ds18b20_Init(osPriorityNormal) on your app.
+6) You can see result on debug . watch : ds18b20.
+
+由于原始库使用的是STM32F4xx系列，在F103移植时，出现找不到onewire设备的问题；
+导致该问题的原因是基本IO口配置为输入模式时不工作，即以下函数 (奇怪的是 `ONEWIRE_OUTPUT` 工作正常);：
+
+```C
+void ONEWIRE_INPUT(OneWire_t *gp);
+```
+
+参考正点原子的代码将`onewire.c`中相应函数修改为以下内容：
+
+```C
+// PG7 as GPIO pin
+void ONEWIRE_INPUT(OneWire_t *gp) {
+  IO_MODE_IN(gp->GPIOx,gp->GPIO_Pin);   // 需要定义宏 IO_MODE_IN
+  // gp->GPIOx->CRL&=0X0FFFFFFF;
+  // gp->GPIOx->CRL|=8<<28;
+}
+// 该函数可以不用改写
+void ONEWIRE_OUTPUT(OneWire_t *gp) {
+  IO_MODE_OUT(gp->GPIOx,gp->GPIO_Pin);  // 需要定义宏 IO_MODE_OUT
+  // gp->GPIOx->CRL&=0X0FFFFFFF;
+  // gp->GPIOx->CRL|=3<<28;
+}
+```
+
+另外修改了库里的延时函数:
+```C
+void ONEWIRE_DELAY(uint16_t time_us) {
+#if (_DS18B20_NO_NOT_USE_TIMER==1)	/// 该函数修改自ST库函数
+    //见stm32f1xx_hal_rcc.c -- static void RCC_Delay(uint32_t mdelay)
+  __IO uint32_t Delay = time_us * (SystemCoreClock / 8U / 1000000U);
+  do {
+    __NOP();
+  } while (Delay--);
+#else	/// use 1 us timer for delay
+	__HAL_TIM_SET_COUNTER(&_DS18B20_TIMER,0);  // set the counter value a 0
+	while (__HAL_TIM_GET_COUNTER(&_DS18B20_TIMER) <= time_us);  // wait for the counter to reach the us input in the parameter
+	//_DS18B20_TIMER.Instance->CNT = 0;
+	//while(_DS18B20_TIMER.Instance->CNT <= time_us);
+#endif
+}
+```
+以及 `onewire.h` 的引用头文件：
+```C
+//#include "gpio.h"
+#include "main.h"
+```
+
+
+用法：
+
+1、首先调用初始化函数：
+
+```C
+//使用FreeRTOS
+Ds18b20_Init(osPriorityRealtime);
+//// 没使用FreeRTOS
+// Ds18b20_Init();
+
+2、读取温度：
+```C
+    int16_t temperature;
+    //...
+    if (ds18b20[0].DataIsValid) {
+      temperature = (int16_t) (ds18b20[0].Temperature * 100);
+      print("当前温度:%d.%02d°C", temperature / 100, temperature % 100);
+    } else {
+      print("无效温度");
+    }
+```
+
+例程请参考 https://github.com/nimaltd/ds18b20 中的例程

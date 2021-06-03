@@ -98,7 +98,7 @@ int main(void) {
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-		LCD_ShowString(10, 30, 240, 24, 24, "STM32F103ZET6");
+		LCD_ShowString(10, 30, 240, 60, 60, "STM32F103ZET6");
 		LCD_ShowString(30, 80, 200, 16, 16, "This is a test");
 		LCD_ShowString(30, 110, 200, 16, 16, "Auth:Aaron");
 		LCD_ShowString(54, 140, 200, 16, 16, "2021/05/04");

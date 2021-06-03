@@ -98,18 +98,22 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  key = KeyScan(0);
-	  switch(key){
-	  case KEY0_PRES:
-		  LED0_Tog();
-		  break;
-	  case KEY1_PRES:
-		  LED1_Tog();
-		  break;
-	  case KEY_UP_PRES:
-		  LED0_Tog();
-		  LED1_Tog();
-		  break;
+		key = KeyScan(1);
+		switch (key) {
+		case KEY0_PRES:
+			LED0_Tog();
+			break;
+		case KEY1_PRES:
+			LED1_Tog();
+			break;
+		case KY_UP_PRES:
+			LED0_Tog();
+			LED1_Tog();
+			break;
+		case NO_PRES:
+			LED0_Off();
+			LED1_Off();
+		}
 	  }
   }
   /* USER CODE END 3 */

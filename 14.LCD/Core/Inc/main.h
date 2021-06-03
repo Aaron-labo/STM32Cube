@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -59,7 +59,15 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private defines */
-
+#ifdef DEBUG
+//#define print(format, ...) printf( format "\r\n",##__VA_ARGS__)
+#define print(format, ...) printf("[%04d: %s ][ %10s ]:" format "\r\n",__LINE__,__FILE__,__func__, ##__VA_ARGS__)
+#define debug(format, ...) printf("[%04d: %s ][ %10s ]:" format "\r\n",__LINE__,__FILE__,__func__, ##__VA_ARGS__)
+#else
+//#define print(format, ...)
+#define print(format, ...) printf( format "\r\n",##__VA_ARGS__)
+#define debug(format, ...)
+#endif
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

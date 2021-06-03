@@ -640,7 +640,7 @@ void LCD_Init(void)
 			}
  		}
 	}
- 	printf(" LCD ID:%x\r\n",lcddev.id); //打印LCD ID
+ 	print(" LCD ID:%x\r\n",lcddev.id); //打印LCD ID
 	if(lcddev.id==0X9341)	//9341初始化
 	{
 		LCD_WR_REG(0xCF);
@@ -2721,6 +2721,8 @@ void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t size,uint8_t mode)
 		if(size==12)temp=asc2_1206[num][t]; 	 	//调用1206字体
 		else if(size==16)temp=asc2_1608[num][t];	//调用1608字体
 		else if(size==24)temp=asc2_2412[num][t];	//调用2412字体
+		else if(size==32)temp=asc2_3216[num][t];    //调用3216字体
+		else if(size==60)temp=asc2_6030[num][t];    //调用6030字体
 		else return;								//没有的字库
 		for(t1=0;t1<8;t1++)
 		{
