@@ -10,6 +10,7 @@
 "Core/Src/tim.o"
 "Core/Src/usart.o"
 "Core/Startup/startup_stm32f103zetx.o"
+"Drivers/BEEP/beep.o"
 "Drivers/DS18B20/ds18b20.o"
 "Drivers/HC_SR04/hc_sr04.o"
 "Drivers/KEY/key.o"

@@ -22,6 +22,7 @@ OBJCOPY_BIN :=
 SUBDIRS := \
 Core/Src \
 Core/Startup \
+Drivers/BEEP \
 Drivers/DS18B20 \
 Drivers/HC_SR04 \
 Drivers/KEY \

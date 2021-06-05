@@ -15,6 +15,7 @@ RM := rm -rf
 -include Drivers/KEY/subdir.mk
 -include Drivers/HC_SR04/subdir.mk
 -include Drivers/DS18B20/subdir.mk
+-include Drivers/BEEP/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include subdir.mk
