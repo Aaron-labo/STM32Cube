@@ -72,6 +72,7 @@ uint8_t Tx_Buf[32];
 uint8_t mode, key;
 uint32_t i = 0, time = 0;
 
+
 void LCD_Show() {
 	uint8_t ShowBuffer[64]; //LCD输出缓冲区
 
