@@ -2148,7 +2148,7 @@ void LCD_Show() {
  8001620:	212d      	movs	r1, #45	; 0x2d
  8001622:	2019      	movs	r0, #25
  8001624:	f005 fcee 	bl	8007004 <LCD_ShowString>
-	LCD_ShowString(25, 60, 240, 16, 16,
+	LCD_ShowString(25, 60, 240, 16, 16, (uint8_t*) "| :/\\: || :/\\: || (\\/) |");
  8001628:	4b5b      	ldr	r3, [pc, #364]	; (8001798 <LCD_Show+0x1a4>)
  800162a:	9301      	str	r3, [sp, #4]
  800162c:	2310      	movs	r3, #16
@@ -2158,8 +2158,7 @@ void LCD_Show() {
  8001634:	213c      	movs	r1, #60	; 0x3c
  8001636:	2019      	movs	r0, #25
  8001638:	f005 fce4 	bl	8007004 <LCD_ShowString>
-			(uint8_t*) "| :/\\: || :/\\: || (\\/) |");
-	LCD_ShowString(25, 75, 240, 16, 16,
+	LCD_ShowString(25, 75, 240, 16, 16, (uint8_t*) "| :\\/: || (__) || :\\/: |");
  800163c:	4b57      	ldr	r3, [pc, #348]	; (800179c <LCD_Show+0x1a8>)
  800163e:	9301      	str	r3, [sp, #4]
  8001640:	2310      	movs	r3, #16
@@ -2169,7 +2168,6 @@ void LCD_Show() {
  8001648:	214b      	movs	r1, #75	; 0x4b
  800164a:	2019      	movs	r0, #25
  800164c:	f005 fcda 	bl	8007004 <LCD_ShowString>
-			(uint8_t*) "| :\\/: || (__) || :\\/: |");
 	LCD_ShowString(25, 90, 240, 16, 16, (uint8_t*) "| '--'W|| '--'X|| '--'Y|");
  8001650:	4b53      	ldr	r3, [pc, #332]	; (80017a0 <LCD_Show+0x1ac>)
  8001652:	9301      	str	r3, [sp, #4]
@@ -2180,7 +2178,7 @@ void LCD_Show() {
  800165c:	215a      	movs	r1, #90	; 0x5a
  800165e:	2019      	movs	r0, #25
  8001660:	f005 fcd0 	bl	8007004 <LCD_ShowString>
-	LCD_ShowString(25, 105, 240, 16, 16, (uint8_t*) "`------'`------'`------'");
+	LCD_ShowString(25, 105, 240, 16, 16,(uint8_t*) "`------'`------'`------'");
  8001664:	4b4f      	ldr	r3, [pc, #316]	; (80017a4 <LCD_Show+0x1b0>)
  8001666:	9301      	str	r3, [sp, #4]
  8001668:	2310      	movs	r3, #16
@@ -2892,7 +2890,7 @@ int main(void) {
  8001b68:	4820      	ldr	r0, [pc, #128]	; (8001bec <main+0x240>)
  8001b6a:	f005 fdae 	bl	80076ca <HAL_GPIO_WritePin>
 			}
-			//若此时人不走了，则关闭蜂鸣器
+			//若此时人走了，则关闭蜂鸣器
 			if (manCome == 0) {
  8001b6e:	4b1e      	ldr	r3, [pc, #120]	; (8001be8 <main+0x23c>)
  8001b70:	781b      	ldrb	r3, [r3, #0]
