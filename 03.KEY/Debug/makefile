@@ -10,6 +10,8 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
+-include Drivers/LED/subdir.mk
+-include Drivers/KEY/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include subdir.mk
@@ -35,34 +37,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := 3.KEY
+BUILD_ARTIFACT_NAME := 03.KEY
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-3.KEY.elf \
+03.KEY.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-3.KEY.list \
+03.KEY.list \
 
 OBJCOPY_BIN += \
-3.KEY.bin \
+03.KEY.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: 3.KEY.elf secondary-outputs
+main-build: 03.KEY.elf secondary-outputs
 
 # Tool invocations
-3.KEY.elf: $(OBJS) $(USER_OBJS) E:\Singlechip\stm32\MyCode\stm32Cube\3.KEY\STM32F103ZETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "3.KEY.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\Singlechip\stm32\MyCode\stm32Cube\3.KEY\STM32F103ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="3.KEY.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+03.KEY.elf: $(OBJS) $(USER_OBJS) E:\Singlechip\stm32\MyCode\STM32Cube\03.KEY\STM32F103ZETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "03.KEY.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\Singlechip\stm32\MyCode\STM32Cube\03.KEY\STM32F103ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="03.KEY.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -71,13 +73,13 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-3.KEY.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "3.KEY.list"
+03.KEY.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "03.KEY.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-3.KEY.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "3.KEY.bin"
+03.KEY.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "03.KEY.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

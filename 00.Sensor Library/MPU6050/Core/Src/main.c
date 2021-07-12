@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "mpu6050.h"
+#include "host_computer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

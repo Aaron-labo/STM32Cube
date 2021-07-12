@@ -18,7 +18,7 @@ typedef struct hc_sr04_device_st {
     uint16_t          echo_pin;
     TIM_HandleTypeDef *tim;         //us级硬件定时器
 
-    double            distance;     //测算距离
+    float            distance;     //测算距离
 } hc_sr04_device_t;
 
 /* us级延时函数 */

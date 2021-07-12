@@ -300,6 +300,8 @@ int main(void) {
 			}
 			printf("当前测距结果为：%.2f cm\r\n", hc_sr04.distance);
 			printf("当前温度为：%.2f ℃\r\n", temperature);
+
+
 		}
 	}
 

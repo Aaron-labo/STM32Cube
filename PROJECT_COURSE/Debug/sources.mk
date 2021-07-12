@@ -28,5 +28,6 @@ Drivers/HC_SR04 \
 Drivers/KEY \
 Drivers/LCD \
 Drivers/STM32F1xx_HAL_Driver/Src \
+Drivers/host_computer \
 Drivers/nRF24L01 \
 

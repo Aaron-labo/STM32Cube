@@ -10,6 +10,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Drivers/nRF24L01/subdir.mk
+-include Drivers/host_computer/subdir.mk
 -include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
 -include Drivers/LCD/subdir.mk
 -include Drivers/KEY/subdir.mk
